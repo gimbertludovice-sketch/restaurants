@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUDOVICE RMS - Premium Restaurant Management System 2026</title>
+    <style>
+        /* ========================= DESIGN SYSTEM & CSS VARIABLES ========================= */
+        :root {
+            --bg-dark: #0a0e27;
+            --bg-card: #1a1f3a;
+            --bg-light: #2a3050;
+            --text-main: #f8fafc;
+            --text-muted: #a0aec0;
+            --primary: #ff6b35;
+            --primary-light: #ff8555;
+            --primary-dark: #e55a25;
+            --success: #10b981;
+            --success-light: #34d399;
+            --alert: #ef4444;
+            --warning: #f59e0b;
+            --accent-gold: #fbbf24;
+            --accent-teal: #14b8a6;
+            --font-stack: 'Poppins', 'Inter', 'Segoe UI', sans-serif;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            font-family: var(--font-stack);
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a1f3a 100%);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ========================= LOGIN PAGE ========================= */
+        #login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100%;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a1f3a 100%);
+        }
+
+        .login-box {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(26, 31, 58, 0.9) 100%);
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            border-radius: 20px;
+            padding: 50px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-logo {
+            color: var(--primary);
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .login-title {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 800;
+        }
+
+        .login-subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 107, 53, 0.2);
+            color: var(--text-main);
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(255, 107, 53, 0.3);
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 25px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .signup-link {
+            color: var(--primary);
+            cursor: pointer;
+            text-decoration: underline;
+            margin-left: 5px;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--alert);
+            color: #fca5a5;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+            color: #86efac;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        /* ========================= MAIN APP ========================= */
+        .app-container {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            flex: 1;
+            display: flex;
+        }
+
+        .app-container.show {
+            display: flex;
+        }
+
+        /* ========================= SIDEBAR NAVIGATION ========================= */
+        aside {
+            width: 280px;
+            background: linear-gradient(180deg, var(--bg-card) 0%, rgba(26, 31, 58, 0.8) 100%);
+            border-right: 2px solid rgba(255, 107, 53, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 25px;
+            flex-shrink: 0;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .brand {
+            margin-bottom: 35px;
+        }
+
+        .brand h2 {
+            color: var(--primary);
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            font-weight: 800;
+            text-shadow: 0 2px 4px rgba(255, 107, 53, 0.3);
+        }
+
+        .brand p {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        .user-profile {
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.8rem;
+        }
+
+        .user-profile .username {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .user-profile .role {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .nav-links {
+            list-style: none;
+            flex-grow: 1;
+            margin-bottom: 20px;
+        }
+
+        .nav-section-title {
+            font-size: 0.7rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .nav-links li {
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-left: 3px solid transparent;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .nav-links li.visible {
+            display: block;
+        }
+
+        .nav-links li:hover {
+            background-color: rgba(255, 107, 53, 0.15);
+            color: var(--primary-light);
+            border-left-color: var(--primary);
+        }
+
+        .nav-links li.active {
+            background: linear-gradient(90deg, rgba(255, 107, 53, 0.2) 0%, rgba(255, 107, 53, 0) 100%);
+            color: var(--primary);
+            border-left-color: var(--primary);
+            font-weight: 600;
+        }
+
+        .owner-info {
+            border-top: 1px solid rgba(255, 107, 53, 0.2);
+            padding-top: 15px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--alert);
+            border: 1px solid var(--alert);
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.25);
+        }
+
+        /* ========================= MAIN CONTENT ========================= */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .view-content {
+            display: none;
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .view-content.active-view {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ========================= ACCOUNT MANAGEMENT ========================= */
+        #accounts-view {
+            max-width: 1000px;
+        }
+
+        .accounts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(255, 107, 53, 0.3);
+        }
+
+        .accounts-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .accounts-table thead {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.2) 0%, rgba(255, 107, 53, 0.1) 100%);
+        }
+
+        .accounts-table th {
+            padding: 16px;
+            text-align: left;
+            color: var(--primary);
+            font-weight: 700;
+            border-bottom: 2px solid rgba(255, 107, 53, 0.2);
+        }
+
+        .accounts-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255, 107, 53, 0.1);
+            color: var(--text-main);
+        }
+
+        .accounts-table tbody tr:hover {
+            background: rgba(255, 107, 53, 0.05);
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .role-manager {
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+        }
+
+        .role-cashier {
+            background: rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
+        }
+
+        .role-kitchen {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fdba74;
+        }
+
+        .role-server {
+            background: rgba(139, 92, 246, 0.2);
+            color: #d8b4fe;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-edit {
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+        }
+
+        .btn-edit:hover {
+            background: rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+
+        .btn-delete:hover {
+            background: rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-reset {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fdba74;
+        }
+
+        .btn-reset:hover {
+            background: rgba(249, 115, 22, 0.4);
+        }
+
+        /* ========================= MODAL ========================= */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .modal-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .modal-form-group label {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .modal-form-group input,
+        .modal-form-group select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 107, 53, 0.2);
+            color: var(--text-main);
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-family: var(--font-stack);
+            transition: all 0.3s ease;
+        }
+
+        .modal-form-group input:focus,
+        .modal-form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            background: rgba(160, 174, 192, 0.1);
+            color: var(--text-muted);
+            border: 1px solid rgba(160, 174, 192, 0.2);
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(160, 174, 192, 0.2);
+        }
+
+        .btn-submit {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        /* ========================= DASHBOARD ========================= */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(26, 31, 58, 0.8) 100%);
+            border: 2px solid rgba(255, 107, 53, 0.2);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            color: var(--primary);
+            font-size: 2.2rem;
+            font-weight: 800;
+        }
+
+        /* ========================= RESTRICTED VIEW ========================= */
+        .restricted-message {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+            border: 2px solid var(--alert);
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .restricted-message h3 {
+            color: var(--alert);
+            margin-bottom: 10px;
+        }
+
+        .restricted-message p {
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ========================= LOGIN PAGE ========================= -->
+    <div id="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="login-logo">🍽️</div>
+                <h1 class="login-title">LUDOVICE</h1>
+                <p class="login-subtitle">Restaurant Management System</p>
+            </div>
+
+            <div class="error-message" id="loginError"></div>
+            <div class="success-message" id="loginSuccess"></div>
+
+            <div class="login-form">
+                <div class="form-group">
+                    <label for="loginUsername">📧 Username / Email</label>
+                    <input type="text" id="loginUsername" placeholder="Enter your username">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">🔐 Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password">
+                </div>
+                <button class="login-btn" onclick="handleLogin()">🔓 Login</button>
+            </div>
+
+            <div class="login-footer">
+                Don't have an account? <span class="signup-link" onclick="showSignup()">Sign Up</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================= SIGN UP PAGE ========================= -->
+    <div id="signup-container" style="display: none;">
+        <div class="login-box" style="max-width: 500px;">
+            <div class="login-header">
+                <h1 class="login-title">Create Account</h1>
+                <p class="login-subtitle">Set up your LUDOVICE account</p>
+            </div>
+
+            <div class="error-message" id="signupError"></div>
+
+            <div class="login-form">
+                <div class="form-group">
+                    <label for="signupUsername">👤 Username</label>
+                    <input type="text" id="signupUsername" placeholder="Choose a username">
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">📧 Email</label>
+                    <input type="email" id="signupEmail" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">🔐 Password</label>
+                    <input type="password" id="signupPassword" placeholder="Min 6 characters">
+                </div>
+                <div class="form-group">
+                    <label for="signupRole">👔 Role</label>
+                    <select id="signupRole">
+                        <option value="">Select your role</option>
+                        <option value="manager">Manager</option>
+                        <option value="cashier">Cashier</option>
+                        <option value="kitchen">Kitchen Staff</option>
+                        <option value="server">Server</option>
+                    </select>
+                </div>
+                <button class="login-btn" onclick="handleSignup()">✅ Create Account</button>
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 10px; cursor: pointer;"
+                    onclick="showLogin()">← Back to Login</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================= MAIN APP ========================= -->
+    <div class="app-container" id="appContainer">
+        <!-- SIDEBAR -->
+        <aside>
+            <div>
+                <div class="brand">
+                    <h2>LUDOVICE</h2>
+                    <p>PREMIUM RMS 2026</p>
+                </div>
+
+                <div class="user-profile">
+                    <div class="username" id="currentUsername">User</div>
+                    <div class="role" id="currentRole">Role</div>
+                </div>
+
+                <ul class="nav-links">
+                    <li class="nav-section-title">MENU</li>
+                    <li class="nav-item visible" onclick="switchView('dashboard-view', this)">📊 Dashboard</li>
+                    <li class="nav-item visible" onclick="switchView('foh-view', this)">🧑‍💼 FOH (Front of House)</li>
+                    <li class="nav-item visible" onclick="switchView('kds-view', this)">🍳 Kitchen Display</li>
+                    <li class="nav-item visible" onclick="switchView('orders-view', this)">📦 Order History</li>
+
+                    <li class="nav-section-title" style="margin-top: 30px;">ADMIN</li>
+                    <li class="nav-item" id="nav-accounts" onclick="switchView('accounts-view', this)">👥 Manage
+                        Accounts</li>
+                    <li class="nav-item" id="nav-reports" onclick="switchView('reports-view', this)">📈 Reports</li>
+                    <li class="nav-item" id="nav-settings" onclick="switchView('settings-view', this)">⚙️ Settings</li>
+                </ul>
+            </div>
+
+            <div class="owner-info">
+                <strong>Manager Email:</strong>
+                gimbertludovice@student.trimexcolleges.edu.ph
+                <button class="logout-btn" onclick="handleLogout()">🚪 Logout</button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main>
+            <!-- Dashboard View -->
+            <div id="dashboard-view" class="view-content active-view">
+                <h2>📊 Dashboard</h2>
+
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Accounts</div>
+                        <div class="stat-value" id="statAccounts">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Active Users</div>
+                        <div class="stat-value" id="statActive">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Your Role</div>
+                        <div class="stat-value" id="statRole" style="font-size: 1.2rem; text-transform: capitalize;">-
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 30px;">👋 Welcome Back!</h3>
+                <p style="color: var(--text-muted); line-height: 1.6;">
+                    This is your restaurant management dashboard. To manage user accounts and control access,
+                    navigate to the <strong>Manage Accounts</strong> section in the sidebar (Admin section).
+                    Only managers can create and manage user accounts.
+                </p>
+            </div>
+
+            <!-- Accounts Management View -->
+            <div id="accounts-view" class="view-content">
+                <div class="accounts-header">
+                    <h2>👥 Manage User Accounts</h2>
+                    <button class="btn-primary" onclick="openAddAccountModal()">➕ Create New Account</button>
+                </div>
+
+                <table class="accounts-table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="accountsTableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Reports View -->
+            <div id="reports-view" class="view-content">
+                <h2>📈 Reports & Analytics</h2>
+                <p style="color: var(--text-muted); margin-top: 20px;">Reports section coming soon...</p>
+            </div>
+
+            <!-- Settings View -->
+            <div id="settings-view" class="view-content">
+                <h2>⚙️ System Settings</h2>
+                <p style="color: var(--text-muted); margin-top: 20px;">Settings section coming soon...</p>
+            </div>
+
+            <!-- FOH View Placeholder -->
+            <div id="foh-view" class="view-content">
+                <h2>🧑‍💼 Front of House</h2>
+                <p style="color: var(--text-muted); margin-top: 20px;">FOH module will be displayed here...</p>
+            </div>
+
+            <!-- KDS View Placeholder -->
+            <div id="kds-view" class="view-content">
+                <h2>🍳 Kitchen Display System</h2>
+                <p style="color: var(--text-muted); margin-top: 20px;">Kitchen orders will be displayed here...</p>
+            </div>
+
+            <!-- Orders View Placeholder -->
+            <div id="orders-view" class="view-content">
+                <h2>📦 Order History</h2>
+                <p style="color: var(--text-muted); margin-top: 20px;">Order history will be displayed here...</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- ========================= ADD ACCOUNT MODAL ========================= -->
+    <div id="addAccountModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">➕ Create New Account</div>
+
+            <div class="error-message" id="modalError"></div>
+
+            <form class="modal-form" onsubmit="handleCreateAccount(event)">
+                <div class="modal-form-group">
+                    <label for="newUsername">Username</label>
+                    <input type="text" id="newUsername" required placeholder="Choose a username">
+                </div>
+
+                <div class="modal-form-group">
+                    <label for="newEmail">Email Address</label>
+                    <input type="email" id="newEmail" required placeholder="user@example.com">
+                </div>
+
+                <div class="modal-form-group">
+                    <label for="newPassword">Password</label>
+                    <input type="password" id="newPassword" required placeholder="Min 6 characters">
+                </div>
+
+                <div class="modal-form-group">
+                    <label for="newRole">User Role</label>
+                    <select id="newRole" required>
+                        <option value="">Select a role</option>
+                        <option value="cashier">Cashier</option>
+                        <option value="kitchen">Kitchen Staff</option>
+                        <option value="server">Server</option>
+                        <option value="manager">Manager (Admin)</option>
+                    </select>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancel" onclick="closeAddAccountModal()">Cancel</button>
+                    <button type="submit" class="btn-submit">Create Account</button>
+                </div>
+            </form>
+
+            <div
+                style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255, 107, 53, 0.2); font-size: 0.85rem; color: var(--text-muted);">
+                <strong>📧 Email Notification:</strong> Once created, account credentials will be sent to the user's
+                email address and to the manager at gimbertludovice@student.trimexcolleges.edu.ph
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================= USER DATABASE & AUTH ========================= 
+        let currentUser = null;
+        const userDatabase = JSON.parse(localStorage.getItem('ludovice_users')) || [];
+        const managerEmail = 'gimbertludovice@student.trimexcolleges.edu.ph';
+
+        // Initialize with demo accounts if empty
+        if (userDatabase.length === 0) {
+            userDatabase.push(
+                {
+                    id: 1,
+                    username: 'demo_manager',
+                    email: managerEmail,
+                    password: 'demo123', // In production: hash this
+                    role: 'manager',
+                    status: 'active',
+                    created: new Date().toLocaleDateString()
+                },
+                {
+                    id: 2,
+                    username: 'demo_cashier',
+                    email: 'cashier@ludovice.com',
+                    password: 'demo123',
+                    role: 'cashier',
+                    status: 'active',
+                    created: new Date().toLocaleDateString()
+                }
+            );
+            localStorage.setItem('ludovice_users', JSON.stringify(userDatabase));
+        }
+
+        // ========================= AUTHENTICATION FUNCTIONS ========================= 
+        function handleLogin() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const errorEl = document.getElementById('loginError');
+
+            errorEl.classList.remove('show');
+
+            if (!username || !password) {
+                showError(errorEl, '⚠️ Please enter both username and password');
+                return;
+            }
+
+            const user = userDatabase.find(u =>
+                (u.username === username || u.email === username) && u.password === password
+            );
+
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('ludovice_current_user', JSON.stringify(user));
+                showLoginPage(false);
+                loadDashboard();
+            } else {
+                showError(errorEl, '❌ Invalid username or password');
+            }
+        }
+
+        function handleSignup() {
+            const username = document.getElementById('signupUsername').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const role = document.getElementById('signupRole').value;
+            const errorEl = document.getElementById('signupError');
+
+            errorEl.classList.remove('show');
+
+            if (!username || !email || !password || !role) {
+                showError(errorEl, '⚠️ Please fill in all fields');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError(errorEl, '⚠️ Password must be at least 6 characters');
+                return;
+            }
+
+            if (userDatabase.find(u => u.username === username || u.email === email)) {
+                showError(errorEl, '⚠️ Username or email already exists');
+                return;
+            }
+
+            const newUser = {
+                id: Math.max(...userDatabase.map(u => u.id), 0) + 1,
+                username,
+                email,
+                password,
+                role,
+                status: 'active',
+                created: new Date().toLocaleDateString()
+            };
+
+            userDatabase.push(newUser);
+            localStorage.setItem('ludovice_users', JSON.stringify(userDatabase));
+
+            showLoginPage(true);
+            document.getElementById('signupUsername').value = '';
+            document.getElementById('signupEmail').value = '';
+            document.getElementById('signupPassword').value = '';
+            document.getElementById('signupRole').value = '';
+
+            const successEl = document.getElementById('loginSuccess');
+            successEl.innerText = '✅ Account created! You can now log in.';
+            successEl.classList.add('show');
+            setTimeout(() => successEl.classList.remove('show'), 5000);
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                currentUser = null;
+                localStorage.removeItem('ludovice_current_user');
+                showLoginPage(true);
+                document.getElementById('loginUsername').value = '';
+                document.getElementById('loginPassword').value = '';
+            }
+        }
+
+        function showError(element, message) {
+            element.innerText = message;
+            element.classList.add('show');
+            setTimeout(() => element.classList.remove('show'), 5000);
+        }
+
+        function showLoginPage(show) {
+            document.getElementById('login-container').style.display = show ? 'flex' : 'none';
+            document.getElementById('signup-container').style.display = 'none';
+            document.getElementById('appContainer').classList.toggle('show', !show);
+        }
+
+        function showLogin() {
+            document.getElementById('signup-container').style.display = 'none';
+            document.getElementById('login-container').style.display = 'flex';
+        }
+
+        function showSignup() {
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('signup-container').style.display = 'flex';
+        }
+
+        // ========================= NAVIGATION & VIEWS ========================= 
+        function switchView(viewId, element) {
+            if (!checkAccess(viewId)) {
+                alert('❌ You do not have access to this section.');
+                return;
+            }
+
+            document.querySelectorAll('.view-content').forEach(v => v.classList.remove('active-view'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+            document.getElementById(viewId).classList.add('active-view');
+            if (element) element.classList.add('active');
+
+            // Load view-specific content
+            if (viewId === 'accounts-view') loadAccounts();
+            if (viewId === 'dashboard-view') loadDashboard();
+        }
+
+        function checkAccess(viewId) {
+            if (!currentUser) return false;
+
+            const adminViews = ['accounts-view', 'reports-view', 'settings-view'];
+
+            if (adminViews.includes(viewId) && currentUser.role !== 'manager') {
+                return false;
+            }
+
+            return true;
+        }
+
+        function updateNavigationAccess() {
+            document.getElementById('nav-accounts').classList.toggle('visible', currentUser.role === 'manager');
+            document.getElementById('nav-reports').classList.toggle('visible', currentUser.role === 'manager');
+            document.getElementById('nav-settings').classList.toggle('visible', currentUser.role === 'manager');
+        }
+
+        // ========================= DASHBOARD FUNCTIONS ========================= 
+        function loadDashboard() {
+            document.getElementById('currentUsername').innerText = currentUser.username;
+            document.getElementById('currentRole').innerText = currentUser.role.toUpperCase();
+            document.getElementById('statRole').innerText = currentUser.role;
+            document.getElementById('statAccounts').innerText = userDatabase.length;
+            document.getElementById('statActive').innerText = userDatabase.filter(u => u.status === 'active').length;
+
+            updateNavigationAccess();
+        }
+
+        // ========================= ACCOUNT MANAGEMENT FUNCTIONS ========================= 
+        function openAddAccountModal() {
+            if (currentUser.role !== 'manager') {
+                alert('❌ Only managers can create accounts');
+                return;
+            }
+            document.getElementById('addAccountModal').classList.add('show');
+        }
+
+        function closeAddAccountModal() {
+            document.getElementById('addAccountModal').classList.remove('show');
+            document.getElementById('newUsername').value = '';
+            document.getElementById('newEmail').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('newRole').value = '';
+            document.getElementById('modalError').classList.remove('show');
+        }
+
+        function handleCreateAccount(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('newUsername').value.trim();
+            const email = document.getElementById('newEmail').value.trim();
+            const password = document.getElementById('newPassword').value;
+            const role = document.getElementById('newRole').value;
+            const errorEl = document.getElementById('modalError');
+
+            errorEl.classList.remove('show');
+
+            if (userDatabase.find(u => u.username === username || u.email === email)) {
+                showError(errorEl, '⚠️ Username or email already exists');
+                return;
+            }
+
+            const newUser = {
+                id: Math.max(...userDatabase.map(u => u.id), 0) + 1,
+                username,
+                email,
+                password,
+                role,
+                status: 'active',
+                created: new Date().toLocaleDateString()
+            };
+
+            userDatabase.push(newUser);
+            localStorage.setItem('ludovice_users', JSON.stringify(userDatabase));
+
+            // Simulate email notification (in production, use backend)
+            console.log(`📧 Email would be sent to: ${email}`);
+            console.log(`📧 Also notify manager: ${managerEmail}`);
+            console.log(`Account Details:\nUsername: ${username}\nPassword: ${password}\nRole: ${role}`);
+
+            alert(`✅ Account created!\n\n📧 Email notification would be sent to:\n• ${email}\n• ${managerEmail}\n\nCredentials:\nUsername: ${username}\nPassword: ${password}`);
+
+            closeAddAccountModal();
+            loadAccounts();
+            loadDashboard();
+        }
+
+        function loadAccounts() {
+            const tbody = document.getElementById('accountsTableBody');
+            tbody.innerHTML = '';
+
+            userDatabase.forEach(user => {
+                const row = document.createElement('tr');
+
+                const roleColor = {
+                    'manager': 'role-manager',
+                    'cashier': 'role-cashier',
+                    'kitchen': 'role-kitchen',
+                    'server': 'role-server'
+                };
+
+                row.innerHTML = `
+                    <td><strong>${user.username}</strong></td>
+                    <td>${user.email}</td>
+                    <td><span class="role-badge ${roleColor[user.role]}">${user.role}</span></td>
+                    <td><span style="color: var(--success);">● ${user.status}</span></td>
+                    <td>${user.created}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-sm btn-edit" onclick="editAccount(${user.id})">✏️ Edit</button>
+                            <button class="btn-sm btn-reset" onclick="resetPassword(${user.id})">🔑 Reset</button>
+                            <button class="btn-sm btn-delete" onclick="deleteAccount(${user.id})">🗑️ Delete</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function editAccount(userId) {
+            alert('✏️ Edit functionality coming soon...');
+        }
+
+        function resetPassword(userId) {
+            const user = userDatabase.find(u => u.id === userId);
+            if (!user) return;
+
+            const newPassword = 'RESET' + Math.random().toString(36).substring(7).toUpperCase();
+            user.password = newPassword;
+            localStorage.setItem('ludovice_users', JSON.stringify(userDatabase));
+
+            alert(`🔐 Password Reset\n\nNew Password: ${newPassword}\n\n📧 This would be sent to:\n• ${user.email}\n• ${managerEmail}`);
+        }
+
+        function deleteAccount(userId) {
+            if (!confirm('Are you sure you want to delete this account?')) return;
+
+            const index = userDatabase.findIndex(u => u.id === userId);
+            if (index > -1) {
+                userDatabase.splice(index, 1);
+                localStorage.setItem('ludovice_users', JSON.stringify(userDatabase));
+                loadAccounts();
+                loadDashboard();
+                alert('✅ Account deleted');
+            }
+        }
+
+        // ========================= INITIALIZATION ========================= 
+        window.onload = () => {
+            const savedUser = localStorage.getItem('ludovice_current_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showLoginPage(false);
+                loadDashboard();
+            } else {
+                showLoginPage(true);
+            }
+        };
+    </script>
+</body>
+
+</html>
